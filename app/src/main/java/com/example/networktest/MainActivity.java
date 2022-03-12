@@ -28,39 +28,40 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        btnCalc = findViewById(R.id.btn_Calc);
+        result = findViewById(R.id.res_View);
+        btnSend = findViewById(R.id.btn_Send);
+        userInput = findViewById(R.id.inpt_ImmNumb);
+        answerFromSrv = findViewById(R.id.srvr_Ans_View);
     }
 
 
     //Calculating Function
         public void calculation(View view) {
-            userInput = findViewById(R.id.inpt_ImmNumb);
-            btnCalc = findViewById(R.id.btn_Calc);
-            result = findViewById(R.id.res_View);
 
-                    boolean checkMinus = false;
                     String stringInput = convertToString(userInput);
                     System.out.println(stringInput);
-                    char[] userInpt_toChar = stringInput.toCharArray();
-                    int quersummme = 0;
-                    for (int index = 0; index < stringInput.length(); index++) {
-                        if (checkMinus) {
-                            quersummme += Character.getNumericValue(userInpt_toChar[index]);
-                            checkMinus = false;
-                        } else {
-                            quersummme -= Character.getNumericValue(userInpt_toChar[index]);
-                            checkMinus = true;
-                        }
+                    int int_user_input = Integer.parseInt(stringInput);
+                    boolean check_Addition = true;
+                    int quersummme;
+                    while (int_user_input > 11){
+                         quersummme = 0;
+                         while (int_user_input > 0){
+                             if(check_Addition){quersummme += int_user_input % 10;}
+                             else {quersummme -= int_user_input % 10;}
+                             check_Addition = !check_Addition;
+                             int_user_input /= 10;
+                         }
+                         int_user_input = quersummme;
                     }
-
-                    result.setText(quersummme);
+                  if( int_user_input < 0 ) {int_user_input += 11;}
+            if (int_user_input % 2 == 0){ result.setText("Is Even!");
+            }else{ result.setText("Is Odd!"); }
     }
     //----------------------------------------------------------------------------------------------
 
            //Sending Function
            public void sendToServer(View view) {
-               btnSend = findViewById(R.id.btn_Send);
-               userInput = findViewById(R.id.inpt_ImmNumb);
-               answerFromSrv = findViewById(R.id.srvr_Ans_View);
 
                Thread thread = new Thread(new Runnable() {
                    @Override
@@ -71,26 +72,26 @@ public class MainActivity extends AppCompatActivity{
                            //-------------------------------------------------
 
                            //Create necessary streams inFromServer/outToServer
-                           PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream());
-                           //DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                           //PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream());
+                           DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                            //-------------------------------------------------
-
+                           System.out.println("IM here 1");
                            //Send and receive information
-                           printWriter.println(userInput);
-                           printWriter.flush();
-                           //outToServer.writeBytes(convertToString(userInput) + '\n');
+                           //printWriter.println(userInput);
+                          // printWriter.flush();
+                           outToServer.writeBytes(convertToString(userInput) + '\n');
                            serverOutput = inFromServer.readLine();
                            //-------------------------------------
-
+                           System.out.println("IM here 2");
                            //Set answer on view
                            answerFromSrv.setText(serverOutput);
                            //---------------------------------
-
+                           System.out.println("IM here 3");
                            //Close all streams
                            inFromServer.close();
-                           printWriter.close();
-                           //outToServer.close();
+                           //printWriter.close();
+                           outToServer.close();
                            clientSocket.close();
                            //-------------------
 
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity{
                        }
                    }
                });
-
+               System.out.println("IM here 4");
                thread.start();
 
                try {
