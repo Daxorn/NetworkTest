@@ -54,66 +54,68 @@ public class MainActivity extends AppCompatActivity{
 
                     result.setText(quersummme);
     }
+    //----------------------------------------------------------------------------------------------
 
+           //Sending Function
+           public void sendToServer(View view) {
+               btnSend = findViewById(R.id.btn_Send);
+               userInput = findViewById(R.id.inpt_ImmNumb);
+               answerFromSrv = findViewById(R.id.srvr_Ans_View);
 
+               Thread thread = new Thread(new Runnable() {
+                   @Override
+                   public void run() {
+                       try {
+                           //Create connection to server
+                           clientSocket = new Socket(SERVER_URL, SERVER_PORT);
+                           //-------------------------------------------------
 
-        //-------------------------------------------------
-        //Sending Function
+                           //Create necessary streams inFromServer/outToServer
+                           PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream());
+                           //DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                           BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                           //-------------------------------------------------
 
-    public void sendToServer(View view) {
-        btnSend = findViewById(R.id.btn_Send);
-        userInput = findViewById(R.id.inpt_ImmNumb);
-        answerFromSrv = findViewById(R.id.srvr_Ans_View);
+                           //Send and receive information
+                           printWriter.println(userInput);
+                           printWriter.flush();
+                           //outToServer.writeBytes(convertToString(userInput) + '\n');
+                           serverOutput = inFromServer.readLine();
+                           //-------------------------------------
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    //Create connection to server
-                    clientSocket = new Socket(SERVER_URL, SERVER_PORT);
-                    //-------------------------------------------------
+                           //Set answer on view
+                           answerFromSrv.setText(serverOutput);
+                           //---------------------------------
 
-                    //Create necessary streams inFromServer/outToServer
-                    DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-                    BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                    //-------------------------------------------------
+                           //Close all streams
+                           inFromServer.close();
+                           printWriter.close();
+                           //outToServer.close();
+                           clientSocket.close();
+                           //-------------------
 
-                    //Send and receive information
-                    outToServer.writeBytes(convertToString(userInput) + '\n');
-                    serverOutput = inFromServer.readLine();
-                    //-------------------------------------
+                       } catch (UnknownHostException e) {
+                           serverOutput = "! Unknown Host !";
+                           e.printStackTrace();
+                       } catch (IOException e) {
+                           serverOutput = "! Server Error !";
+                           e.printStackTrace();
+                       }
+                   }
+               });
 
-                    //Set answer on view
-                    answerFromSrv.setText(serverOutput);
-                    //---------------------------------
+               thread.start();
 
-                    //Close all streams
-                    inFromServer.close();
-                    outToServer.close();
-                    clientSocket.close();
-                    //-------------------
-                }catch (UnknownHostException e) {
-                    serverOutput = "! Unknown Host !" ;
-                    e.printStackTrace();
-                }catch (IOException e){
-                    serverOutput = "! Server Error !" ;
-                    e.printStackTrace();
-                }
-            }
-        });
+               try {
+                   thread.join();
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
 
-        thread.start();
+           }
+      //-------------------------------------------------------------------------------------
 
-        try {
-            thread.join();
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-
-}
-
-
-    public String convertToString(EditText userInput){
+       public String convertToString(EditText userInput){
         return userInput.getText().toString();
     }
 
