@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity{
             btnCalc = findViewById(R.id.btn_Calc);
             result = findViewById(R.id.res_View);
 
-                    Boolean checkMinus = false;
+                    boolean checkMinus = false;
                     String stringInput = convertToString(userInput);
                     System.out.println(stringInput);
                     char[] userInpt_toChar = stringInput.toCharArray();
@@ -114,8 +114,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     public String convertToString(EditText userInput){
-        String user_Input_converted = userInput.getText().toString();
-        return user_Input_converted;
+        return userInput.getText().toString();
     }
 
 }
