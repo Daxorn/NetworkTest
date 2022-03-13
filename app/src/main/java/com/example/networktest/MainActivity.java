@@ -72,25 +72,21 @@ public class MainActivity extends AppCompatActivity{
                            //-------------------------------------------------
 
                            //Create necessary streams inFromServer/outToServer
-                           //PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream());
                            DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                            //-------------------------------------------------
-                           System.out.println("IM here 1");
+
                            //Send and receive information
-                           //printWriter.println(userInput);
-                          // printWriter.flush();
                            outToServer.writeBytes(convertToString(userInput) + '\n');
                            serverOutput = inFromServer.readLine();
                            //-------------------------------------
-                           System.out.println("IM here 2");
+
                            //Set answer on view
                            answerFromSrv.setText(serverOutput);
                            //---------------------------------
-                           System.out.println("IM here 3");
+
                            //Close all streams
                            inFromServer.close();
-                           //printWriter.close();
                            outToServer.close();
                            clientSocket.close();
                            //-------------------
@@ -104,7 +100,7 @@ public class MainActivity extends AppCompatActivity{
                        }
                    }
                });
-               System.out.println("IM here 4");
+
                thread.start();
 
                try {
