@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity{
         public void calculation(View view) {
 
                     String stringInput = convertToString(userInput);
-                    System.out.println(stringInput);
+
                     int int_user_input = Integer.parseInt(stringInput);
                     boolean check_Addition = true;
                     int quersummme;
