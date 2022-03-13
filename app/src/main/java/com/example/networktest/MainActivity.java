@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity{
                          }
                          int_user_input = quersummme;
                     }
-                  if( int_user_input < 0 ) {int_user_input += 11;}
+
             if (int_user_input % 2 == 0){ result.setText("Is Even!");
             }else{ result.setText("Is Odd!"); }
     }
