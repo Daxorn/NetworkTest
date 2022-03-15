@@ -43,19 +43,19 @@ public class MainActivity extends AppCompatActivity{
 
                     int int_user_input = Integer.parseInt(stringInput);
                     boolean check_Addition = true;
-                    int quersummme;
-                    while (int_user_input > 11){
-                         quersummme = 0;
+                    int quersummme = 0;
+                   // while (int_user_input > 11){
+                         //quersummme = 0;
                          while (int_user_input > 0){
                              if(check_Addition){quersummme += int_user_input % 10;}
                              else {quersummme -= int_user_input % 10;}
                              check_Addition = !check_Addition;
                              int_user_input /= 10;
                          }
-                         int_user_input = quersummme;
-                    }
+                         //int_user_input = quersummme;
+                   // }
 
-            if (int_user_input % 2 == 0){ result.setText("Is Even!");
+            if (quersummme % 2 == 0){ result.setText("Is Even!");
             }else{ result.setText("Is Odd!"); }
     }
     //----------------------------------------------------------------------------------------------
